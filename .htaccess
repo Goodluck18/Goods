@@ -1,0 +1,44 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteRule ^receipt/([a-f0-9]{64})/?$ /receipt.php?token=$1 [QSA,L]
+  RewriteRule ^tag/([a-z0-9-]+)/?$ /tag-search.php?tag=$1 [QSA,L]
+  # Server-render public HTML routes through the SEO shell so crawlers and
+  # social platforms receive page-specific metadata in the initial response.
+  RewriteRule ^product/([^/]+)/?$ /seo-page.php [QSA,L]
+  RewriteRule ^review-request/[a-fA-F0-9]{64}/?$ /seo-page.php [QSA,L]
+  RewriteRule ^(?:shop|category)/[^/]+(?:/[^/]+)?/?$ /seo-page.php [QSA,L]
+  RewriteRule ^(?:categories|search|reviews|about|contact|faq|faqs|collections)/?$ /seo-page.php [QSA,L]
+  RewriteRule ^$ /seo-page.php [QSA,L]
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+</IfModule>
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# Sensitive source, backup and database files must never be web-accessible.
+<FilesMatch "(?i)(^\.env$|\.sql$|\.zip$|\.bak$|\.log$|\.ini$|admin-routes-excerpt\.txt$)">
+  Require all denied
+</FilesMatch>
+<FilesMatch "^service-worker\.js$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Service-Worker-Allowed "/"
+  </IfModule>
+</FilesMatch>

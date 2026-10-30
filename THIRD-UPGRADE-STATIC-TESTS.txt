@@ -1,0 +1,17 @@
+PASS PHP syntax lint: all PHP files in extracted package
+PASS JavaScript syntax: assets/index-jRusL4R4.js
+PASS JavaScript syntax: assets/goodlucks-page-enhancements.js
+PASS JavaScript syntax: assets/goodlucks-pwa.js
+PASS JavaScript syntax: assets/index-third-upgrade.js
+PASS JavaScript syntax: service-worker.js
+PASS PWA manifest JSON and required fields
+PASS PWA icon dimensions: icon-192.png 192x192
+PASS PWA icon dimensions: icon-512.png 512x512
+PASS PWA icon dimensions: apple-touch-icon.png 180x180
+PASS PWA icon dimensions: favicon.png 64x64
+PASS Supplied goodluck_shop.sql compatibility checks (21 tables; expected existing core columns present)
+PASS Upgrade migration adds columns/tables absent from the supplied dump
+PASS Checkout API rejects unpublished/draft products at server side
+PASS Modified ZIP integrity and sensitive-file exclusion checks
+NOT RUN: Live MySQL migration execution (no MySQL server/client or PDO MySQL driver available)
+NOT RUN: Browser/API end-to-end tests against a connected database
